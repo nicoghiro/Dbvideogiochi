@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Creato il: Feb 13, 2024 alle 21:11
--- Versione del server: 10.4.32-MariaDB
--- Versione PHP: 8.2.12
+-- Creato il: Feb 21, 2024 alle 11:52
+-- Versione del server: 10.4.28-MariaDB
+-- Versione PHP: 8.2.4
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -94,23 +94,43 @@ INSERT INTO `recensioni` (`IdRecensione`, `IdGioco`, `Voto`, `Commento`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Struttura della tabella `sede_principale`
+--
+
+CREATE TABLE `sede_principale` (
+  `id_sede` int(11) NOT NULL,
+  `locazione` varchar(250) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dump dei dati per la tabella `sede_principale`
+--
+
+INSERT INTO `sede_principale` (`id_sede`, `locazione`) VALUES
+(1, 'East 45th Street, New York, Stati Uniti'),
+(3, 'Inc.622 Broadway New York, NY 10012 Stati Uniti'),
+(4, 'Maria Skolgata 83 118 53 Stockholm Svezia');
+
+-- --------------------------------------------------------
+
+--
 -- Struttura della tabella `sviluppatori`
 --
 
 CREATE TABLE `sviluppatori` (
   `IdSviluppatore` int(11) NOT NULL,
   `Nome` varchar(50) NOT NULL,
-  `Sede` varchar(100) DEFAULT NULL
+  `Sede_principale` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dump dei dati per la tabella `sviluppatori`
 --
 
-INSERT INTO `sviluppatori` (`IdSviluppatore`, `Nome`, `Sede`) VALUES
-(1, 'Nintendo', 'Kyoto, Giappone'),
-(2, 'Rockstar Games', 'New York, USA'),
-(3, 'Mojang Studios', 'Stoccolma, Svezia');
+INSERT INTO `sviluppatori` (`IdSviluppatore`, `Nome`, `Sede_principale`) VALUES
+(1, 'Nintendo', 1),
+(2, 'Rockstar Games', 3),
+(3, 'Mojang Studios', 4);
 
 -- --------------------------------------------------------
 
@@ -159,10 +179,17 @@ ALTER TABLE `recensioni`
   ADD KEY `IdGioco` (`IdGioco`);
 
 --
+-- Indici per le tabelle `sede_principale`
+--
+ALTER TABLE `sede_principale`
+  ADD PRIMARY KEY (`id_sede`);
+
+--
 -- Indici per le tabelle `sviluppatori`
 --
 ALTER TABLE `sviluppatori`
-  ADD PRIMARY KEY (`IdSviluppatore`);
+  ADD PRIMARY KEY (`IdSviluppatore`),
+  ADD KEY `fk:sede` (`Sede_principale`);
 
 --
 -- Indici per le tabelle `utenti`
@@ -185,6 +212,12 @@ ALTER TABLE `giochi`
 --
 ALTER TABLE `recensioni`
   MODIFY `IdRecensione` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+
+--
+-- AUTO_INCREMENT per la tabella `sede_principale`
+--
+ALTER TABLE `sede_principale`
+  MODIFY `id_sede` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT per la tabella `sviluppatori`
@@ -214,6 +247,12 @@ ALTER TABLE `giochisviluppatori`
 --
 ALTER TABLE `recensioni`
   ADD CONSTRAINT `recensioni_ibfk_1` FOREIGN KEY (`IdGioco`) REFERENCES `giochi` (`IdGioco`);
+
+--
+-- Limiti per la tabella `sviluppatori`
+--
+ALTER TABLE `sviluppatori`
+  ADD CONSTRAINT `fk:sede` FOREIGN KEY (`Sede_principale`) REFERENCES `sede_principale` (`id_sede`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
