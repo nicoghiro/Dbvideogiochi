@@ -3,7 +3,7 @@ session_start();
 if(empty($_SESSION["UTENTE"])){    
     echo "Accesso non consentito";
     header("Location: login.html");
-    exit; // Assicura che lo script termini dopo il reindirizzamento
+    exit; 
 }
 
 try {
@@ -36,24 +36,17 @@ try {
 if(isset($_GET["delete"])) {
   try {
       $deleteId = $_GET["delete"];
-      // Elimina i giochi associati allo sviluppatore dalla tabella giochisviluppatori
       $deleteGamesQuery = "DELETE FROM GiochiSviluppatori WHERE IdSviluppatore = :id";
       $deleteGamesStatement = $conn->prepare($deleteGamesQuery);
       $deleteGamesStatement->bindParam(':id', $deleteId, PDO::PARAM_INT);
       $deleteGamesStatement->execute();
-
-      // Elimina i giochi che non sono mai stati associati a uno sviluppatore
       $deleteOrphanedGamesQuery = "DELETE FROM giochi WHERE IdGioco NOT IN (SELECT IdGioco FROM GiochiSviluppatori)";
       $deleteOrphanedGamesStatement = $conn->prepare($deleteOrphanedGamesQuery);
       $deleteOrphanedGamesStatement->execute();
-
-      // Elimina lo sviluppatore dalla tabella sviluppatori
       $deleteQuery = "DELETE FROM Sviluppatori WHERE IdSviluppatore = :id";
       $deleteStatement = $conn->prepare($deleteQuery);
       $deleteStatement->bindParam(':id', $deleteId, PDO::PARAM_INT);
       $deleteStatement->execute();
-
-      // Reindirizza alla stessa pagina dopo l'eliminazione
       header("Location: " . $_SERVER['PHP_SELF']);
       exit;
   } catch(PDOException $e) {

@@ -86,13 +86,10 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['edit'])) {
             <tbody>
                 <?php
                 try {
-                    // Query per recuperare i commenti
                     $sql = 'SELECT Giochi.Titolo, Recensioni.Voto, Recensioni.Commento,Recensioni.IdRecensione FROM  Giochi INNER JOIN Recensioni ON Giochi.IdGioco = Recensioni.IdGioco;';
                     $statement = $conn->prepare($sql);
                     $statement->execute();
                     $data = $statement->fetchAll();
-
-                    // Ciclo sui risultati e stampa delle righe della tabella
                     foreach ($data as $row) {
                         echo '<tr>';
                         echo '<td>'.$row['Titolo'].'</td>';

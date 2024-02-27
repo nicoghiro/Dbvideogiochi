@@ -10,7 +10,6 @@
     <div class="container mt-5">
         <h1 class="mb-4">Modifica Videogioco</h1>
         <?php
-        // Controlla se è stato fornito un ID per il gioco da modificare
         if(isset($_GET['id'])) {
             $gioco_id = $_GET['id'];
 
@@ -72,8 +71,6 @@
             } catch(PDOException $e) {
                 echo "Connessione al database fallita: " . $e->getMessage();
             }
-
-            // Chiudi la connessione
             $conn = null;
         } else {
             echo "<p>Non è stato fornito un ID per il gioco da modificare.</p>";

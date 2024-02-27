@@ -6,7 +6,6 @@ try {
     $usernamedb = "utente";
     $passworddb = "12345";
     $conn = new PDO("mysql:host=$servername;dbname=videogamesdb", $usernamedb, $passworddb);
-    // set the PDO error mode to exception
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);    
     $sql = 'select Count(*) from utenti WHERE username = :type AND password= :type2;';
     $statement = $conn->prepare($sql);
