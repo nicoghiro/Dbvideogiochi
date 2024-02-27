@@ -34,8 +34,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $statement->bindParam(':nome', $nome, PDO::PARAM_STR);
         $statement->bindParam(':sede_principale', $id_sede, PDO::PARAM_INT);
         $statement->execute();
-
-        echo "Sviluppatore aggiunto con successo.";
+        header("Location: Sviluppatori.php");
     } catch(PDOException $e) {
         echo "Errore durante l'inserimento dello sviluppatore: " . $e->getMessage();
     }

@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Creato il: Feb 21, 2024 alle 11:52
--- Versione del server: 10.4.28-MariaDB
--- Versione PHP: 8.2.4
+-- Creato il: Feb 27, 2024 alle 22:35
+-- Versione del server: 10.4.32-MariaDB
+-- Versione PHP: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -41,10 +41,9 @@ CREATE TABLE `giochi` (
 
 INSERT INTO `giochi` (`IdGioco`, `Titolo`, `Genere`, `AnnoLancio`, `Piattaforma`) VALUES
 (1, 'The Legend of Zelda: Breath of the Wild', 'Action-Adventure', 2017, 'Nintendo Switch'),
-(2, 'Red Dead Redemption 2', 'Action-Adventure', 2018, 'PlayStation 4'),
 (3, 'Minecraft', 'Sandbox', 2011, 'Multiplatform'),
 (7, 'Pokemon nero 2', 'Avventura', 2012, 'Nintendo ds'),
-(8, 'Pokemon bianco 2', 'Nintendo', 2012, 'nintendo ds');
+(10, 'Pokemon Bianco 2', 'Avventura', 2012, 'Nintendo Ds');
 
 -- --------------------------------------------------------
 
@@ -63,9 +62,9 @@ CREATE TABLE `giochisviluppatori` (
 
 INSERT INTO `giochisviluppatori` (`IdGioco`, `IdSviluppatore`) VALUES
 (1, 1),
-(2, 2),
 (3, 3),
-(7, 1);
+(7, 1),
+(10, 1);
 
 -- --------------------------------------------------------
 
@@ -85,11 +84,10 @@ CREATE TABLE `recensioni` (
 --
 
 INSERT INTO `recensioni` (`IdRecensione`, `IdGioco`, `Voto`, `Commento`) VALUES
-(1, 1, 9.5, 'Capolavoro assoluto, grafica incredibile e gameplay avvincente.'),
-(2, 2, 8.8, 'Storia coinvolgente, ma alcuni problemi tecnici.'),
+(1, 7, 6.0, 'Capolavoro assoluto, grafica incredibile e gameplay avvincente.'),
 (5, 7, 10.0, 'Gran giocone '),
 (6, 7, 9.0, 'Bel gioco, campionessa troppo facile da battere'),
-(7, 8, 9.0, 'Molto bello');
+(9, 1, 8.0, 'Ciao ');
 
 -- --------------------------------------------------------
 
@@ -109,7 +107,9 @@ CREATE TABLE `sede_principale` (
 INSERT INTO `sede_principale` (`id_sede`, `locazione`) VALUES
 (1, 'East 45th Street, New York, Stati Uniti'),
 (3, 'Inc.622 Broadway New York, NY 10012 Stati Uniti'),
-(4, 'Maria Skolgata 83 118 53 Stockholm Svezia');
+(4, 'Maria Skolgata 83 118 53 Stockholm Svezia'),
+(5, 'Francia'),
+(6, 'New York, New York, Stati Uniti');
 
 -- --------------------------------------------------------
 
@@ -129,8 +129,8 @@ CREATE TABLE `sviluppatori` (
 
 INSERT INTO `sviluppatori` (`IdSviluppatore`, `Nome`, `Sede_principale`) VALUES
 (1, 'Nintendo', 1),
-(2, 'Rockstar Games', 3),
-(3, 'Mojang Studios', 4);
+(3, 'Mojang Studios', 4),
+(8, 'Rockstar Games', 6);
 
 -- --------------------------------------------------------
 
@@ -205,25 +205,25 @@ ALTER TABLE `utenti`
 -- AUTO_INCREMENT per la tabella `giochi`
 --
 ALTER TABLE `giochi`
-  MODIFY `IdGioco` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `IdGioco` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT per la tabella `recensioni`
 --
 ALTER TABLE `recensioni`
-  MODIFY `IdRecensione` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `IdRecensione` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT per la tabella `sede_principale`
 --
 ALTER TABLE `sede_principale`
-  MODIFY `id_sede` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id_sede` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT per la tabella `sviluppatori`
 --
 ALTER TABLE `sviluppatori`
-  MODIFY `IdSviluppatore` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `IdSviluppatore` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT per la tabella `utenti`
@@ -239,14 +239,14 @@ ALTER TABLE `utenti`
 -- Limiti per la tabella `giochisviluppatori`
 --
 ALTER TABLE `giochisviluppatori`
-  ADD CONSTRAINT `giochisviluppatori_ibfk_1` FOREIGN KEY (`IdGioco`) REFERENCES `giochi` (`IdGioco`),
-  ADD CONSTRAINT `giochisviluppatori_ibfk_2` FOREIGN KEY (`IdSviluppatore`) REFERENCES `sviluppatori` (`IdSviluppatore`);
+  ADD CONSTRAINT `giochisviluppatori_ibfk_1` FOREIGN KEY (`IdGioco`) REFERENCES `giochi` (`IdGioco`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `giochisviluppatori_ibfk_2` FOREIGN KEY (`IdSviluppatore`) REFERENCES `sviluppatori` (`IdSviluppatore`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Limiti per la tabella `recensioni`
 --
 ALTER TABLE `recensioni`
-  ADD CONSTRAINT `recensioni_ibfk_1` FOREIGN KEY (`IdGioco`) REFERENCES `giochi` (`IdGioco`);
+  ADD CONSTRAINT `recensioni_ibfk_1` FOREIGN KEY (`IdGioco`) REFERENCES `giochi` (`IdGioco`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Limiti per la tabella `sviluppatori`

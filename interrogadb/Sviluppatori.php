@@ -3,7 +3,7 @@ session_start();
 if(empty($_SESSION["UTENTE"])){    
     echo "Accesso non consentito";
     header("Location: login.html");
-    exit; 
+    exit; // Assicura che lo script termini dopo il reindirizzamento
 }
 
 try {
@@ -34,22 +34,32 @@ try {
     exit; 
 }
 if(isset($_GET["delete"])) {
-    try {
-        $deleteId = $_GET["delete"];
-        $deleteGamesQuery = "DELETE FROM GiochiSviluppatori WHERE IdSviluppatore = :id";
-        $deleteGamesStatement = $conn->prepare($deleteGamesQuery);
-        $deleteGamesStatement->bindParam(':id', $deleteId, PDO::PARAM_INT);
-        $deleteGamesStatement->execute();
-        $deleteQuery = "DELETE FROM Sviluppatori WHERE IdSviluppatore = :id";
-        $deleteStatement = $conn->prepare($deleteQuery);
-        $deleteStatement->bindParam(':id', $deleteId, PDO::PARAM_INT);
-        $deleteStatement->execute();
-        header("Location: " . $_SERVER['PHP_SELF']);
-        exit;
-    } catch(PDOException $e) {
-        echo "Errore durante l'eliminazione dello sviluppatore: " . $e->getMessage();
-        exit;
-    }
+  try {
+      $deleteId = $_GET["delete"];
+      // Elimina i giochi associati allo sviluppatore dalla tabella giochisviluppatori
+      $deleteGamesQuery = "DELETE FROM GiochiSviluppatori WHERE IdSviluppatore = :id";
+      $deleteGamesStatement = $conn->prepare($deleteGamesQuery);
+      $deleteGamesStatement->bindParam(':id', $deleteId, PDO::PARAM_INT);
+      $deleteGamesStatement->execute();
+
+      // Elimina i giochi che non sono mai stati associati a uno sviluppatore
+      $deleteOrphanedGamesQuery = "DELETE FROM giochi WHERE IdGioco NOT IN (SELECT IdGioco FROM GiochiSviluppatori)";
+      $deleteOrphanedGamesStatement = $conn->prepare($deleteOrphanedGamesQuery);
+      $deleteOrphanedGamesStatement->execute();
+
+      // Elimina lo sviluppatore dalla tabella sviluppatori
+      $deleteQuery = "DELETE FROM Sviluppatori WHERE IdSviluppatore = :id";
+      $deleteStatement = $conn->prepare($deleteQuery);
+      $deleteStatement->bindParam(':id', $deleteId, PDO::PARAM_INT);
+      $deleteStatement->execute();
+
+      // Reindirizza alla stessa pagina dopo l'eliminazione
+      header("Location: " . $_SERVER['PHP_SELF']);
+      exit;
+  } catch(PDOException $e) {
+      echo "Errore durante l'eliminazione dello sviluppatore: " . $e->getMessage();
+      exit;
+  }
 }
 if(isset($_GET["edit"])) {
   header("Location:modifica_sviluppatore.php?id=".$_GET['edit']);
