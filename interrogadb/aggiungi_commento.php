@@ -11,8 +11,8 @@
         <h1 class="mb-4">Aggiungi un Commento</h1>
         <form action="Commenti.php" method="POST">
             <div class="mb-3">
-                <label for="titolo" class="form-label">Titolo del Gioco</label>
-                <select class="form-select" id="titolo" name="titolo" required>
+                <label for="id_gioco" class="form-label">Gioco</label>
+                <select class="form-select" id="id_gioco" name="id_gioco" required>
                     <option value="">Seleziona un gioco</option>
                     <?php
                     try {
@@ -21,12 +21,12 @@
                         $password = "12345";
                         $conn = new PDO("mysql:host=$servername;dbname=videogamesdb", $username, $password);
                         $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-                        $sql = "SELECT Titolo FROM Giochi";
+                        $sql = "SELECT IdGioco, Titolo FROM Giochi";
                         $statement = $conn->prepare($sql);
                         $statement->execute();
                         $giochi = $statement->fetchAll(PDO::FETCH_ASSOC);
                         foreach ($giochi as $gioco) {
-                            echo "<option value='" . $gioco['Titolo'] . "'>" . $gioco['Titolo'] . "</option>";
+                            echo "<option value='" . $gioco['IdGioco'] . "'>" . $gioco['Titolo'] . "</option>";
                         }
                     } catch(PDOException $e) {
                         echo "Connessione fallita: " . $e->getMessage();

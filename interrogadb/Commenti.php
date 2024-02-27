@@ -3,30 +3,23 @@ session_start();
 if($_SESSION["UTENTE"]==""){    
     echo "Accesso non consentito";
     header("location:login.html");
-    exit(); // Termina lo script se l'utente non è autenticato
+    exit();
 }
-
-// Connessione al database
 try {
     $servername = "localhost";
     $username = "utente";
     $password = "12345";
     $conn = new PDO("mysql:host=$servername;dbname=videogamesdb", $username, $password);
-    // Imposta il PDO error mode su eccezione
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch(PDOException $e) {
     echo "Connessione fallita: " . $e->getMessage();
-    exit(); // Termina lo script se la connessione al database fallisce
 }
 
-// Aggiunta di un commento
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    if(isset($_POST['titolo'], $_POST['voto'], $_POST['commento'])) {
-        $titolo = $_POST['titolo'];
+    if(isset($_POST['id_gioco'], $_POST['voto'], $_POST['commento'])) {
+        $titolo = $_POST['id_gioco'];
         $voto = $_POST['voto'];
         $commento = $_POST['commento'];
-        
-        // Esegui l'inserimento nel database
         $sql = "INSERT INTO Recensioni (IdGioco, Voto, Commento) VALUES (:idGioco, :voto, :commento)";
         $statement = $conn->prepare($sql);
         $statement->bindParam(':idGioco', $titolo);
@@ -36,26 +29,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 }
 
-// Eliminazione di un commento
 if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['delete'])) {
     $deleteId = $_GET['delete'];
-    
-    // Esegui l'eliminazione nel database
     $sql = "DELETE FROM Recensioni WHERE IdRecensione = :idRecensione";
     $statement = $conn->prepare($sql);
     $statement->bindParam(':idRecensione', $deleteId);
     $statement->execute();
 }
-
-// Modifica di un commento
 if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['edit'])) {
-    // Reindirizza alla pagina di modifica con l'ID del commento da modificare
-    header("Location: modifica_commento.php?id=" . $_GET['edit']);
+    header("Location: mod_commento.php?id=" . $_GET['edit']);
     exit();
 }
-
-// Chiusura della connessione al database
-
 ?>
 
 <html>
