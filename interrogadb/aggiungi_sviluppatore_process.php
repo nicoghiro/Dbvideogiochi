@@ -1,4 +1,9 @@
 <?php
+session_start();
+if($_SESSION["UTENTE"]==""){    
+    echo "accesso non consentito";
+    header("location:login.html");
+}
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (empty($_POST["nome"]) || empty($_POST["sede_principale"])) {
         echo "Compilare tutti i campi.";

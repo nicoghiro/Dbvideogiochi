@@ -7,6 +7,13 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css">
 </head>
 <body>
+<?php
+session_start();
+if($_SESSION["UTENTE"]==""){    
+    echo "accesso non consentito";
+    header("location:login.html");
+}
+?>
     <div class="container mt-5">
         <h1 class="mb-4">Aggiungi un Commento</h1>
         <form action="Commenti.php" method="POST">

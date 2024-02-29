@@ -1,4 +1,10 @@
 <?php
+session_start();
+if($_SESSION["UTENTE"]==""){    
+    echo "accesso non consentito";
+    header("location:login.html");
+}
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (isset($_POST['id']) && isset($_POST['titolo']) && isset($_POST['genere']) && isset($_POST['anno_lancio']) && isset($_POST['piattaforma']) && isset($_POST['sviluppatore'])) {
         $id = $_POST['id'];

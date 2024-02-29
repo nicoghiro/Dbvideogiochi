@@ -1,4 +1,9 @@
 <?php
+session_start();
+if($_SESSION["UTENTE"]==""){    
+    echo "accesso non consentito";
+    header("location:login.html");
+}
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if(isset($_POST['id_commento'], $_POST['voto'], $_POST['commento'])) {
         $id_commento = $_POST['id_commento'];
